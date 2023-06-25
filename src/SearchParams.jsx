@@ -11,7 +11,6 @@ const SearchParams = () => {
     animal: "",
     breed: "",
   });
-  console.log(requestParams);
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal);
 
