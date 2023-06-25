@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useBreedList from "./useBreedList";
 import Results from "./Results";
 import fetchSearch from "./fetchSearch";
+import AdoptedPetContext from "./AdoptedPetContext";
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
@@ -11,11 +12,13 @@ const SearchParams = () => {
     animal: "",
     breed: "",
   });
+  const [adoptedPet] = useContext(AdoptedPetContext);
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal);
-
-  const results = useQuery(["search", requestParams], fetchSearch);
+  const [page, setPage] = useState(0);
+  const results = useQuery(["search", requestParams, page], fetchSearch);
   const pets = results?.data?.pets ?? [];
+  const hasNext = results?.data?.hasNext ?? false;
 
   return (
     <div className="search-params">
@@ -31,6 +34,12 @@ const SearchParams = () => {
           setRequestParams(obj);
         }}
       >
+        {adoptedPet ? (
+          <div className="pet image-container">
+            <img src={adoptedPet.images[0]} alt={adoptedPet.name} />
+          </div>
+        ) : null}
+
         <label htmlFor="location">
           Location
           <input id="location" name="location" placeholder="Location" />
@@ -62,6 +71,14 @@ const SearchParams = () => {
         </label>
         <button>Submit</button>
       </form>
+      <div className="pagination">
+        <button onClick={() => setPage(page - 1)} disabled={page === 0}>
+          Previous
+        </button>
+        <button onClick={() => setPage(page + 1)} disabled={!hasNext}>
+          Next
+        </button>
+      </div>
       {results.isLoading ? (
         <div className="loading-pane">
           <h2 className="loader">⧖</h2>

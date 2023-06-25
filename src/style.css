@@ -219,6 +219,20 @@
   .search-params button:focus {
     border: 1px solid cornflowerblue;
   }
+
+  .pagination button {
+    display: inline-block;
+    margin: 0px 10px 10px 0px;
+  }
+
+  .pagination button:hover {
+    background-color: #122622;
+  }
+
+  .pagination button:disabled {
+    background-color: #ccc;
+    color: #333;
+  }
   
   #modal {
     background-color: rgba(0, 0, 0, 0.9);
